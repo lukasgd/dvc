@@ -24,8 +24,8 @@ PERIOD = "."
 KEYCRE = re.compile(
     r"""
     (?<!\\)                            # escape \${}
-    \${                                # starts with ${
-    (?P<inner>.*?)                     # match every char inside
+    \${                                # starts with ${dvc_
+    (?P<inner>dvc_.*?)                 # match every char inside
     }                                  # end with {
 """,
     re.VERBOSE,
