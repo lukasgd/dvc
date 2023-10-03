@@ -13,6 +13,8 @@ class CmdRepro(CmdBase):
         stages = self.repo.reproduce(**self._common_kwargs, **self._repro_kwargs)
         if len(stages) == 0:
             ui.write(CmdDataStatus.UP_TO_DATE_MSG)
+        elif self._repro_kwargs['no_lock']:
+            ui.write("Use `dvc commit` and `dvc push` to send your updates to remote storage.")
         else:
             ui.write("Use `dvc push` to send your updates to remote storage.")
 
@@ -40,6 +42,7 @@ class CmdRepro(CmdBase):
         return {
             "run_cache": not self.args.no_run_cache,
             "no_commit": self.args.no_commit,
+            "no_lock": self.args.no_lock,
             "glob": self.args.glob,
         }
 
@@ -162,6 +165,12 @@ def add_parser(subparsers, parent_parser):
         action="store_true",
         default=False,
         help="Don't put files/directories into cache.",
+    )
+    repro_parser.add_argument(
+        "--no-lock",
+        action="store_true",
+        default=False,
+        help="Don't create a dvc.lock file.",
     )
     repro_parser.add_argument(
         "--no-run-cache",

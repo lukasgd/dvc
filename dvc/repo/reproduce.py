@@ -117,7 +117,7 @@ def plan_repro(
     return list(nx.dfs_postorder_nodes(active))
 
 
-def _reproduce_stage(stage: "Stage", **kwargs) -> Optional["Stage"]:
+def _reproduce_stage(stage: "Stage", no_lock: bool = False, **kwargs) -> Optional["Stage"]:
     if stage.frozen and not stage.is_import:
         logger.warning(
             "%s is frozen. Its dependencies are not going to be reproduced.",
@@ -125,7 +125,7 @@ def _reproduce_stage(stage: "Stage", **kwargs) -> Optional["Stage"]:
         )
 
     ret = stage.reproduce(**kwargs)
-    if ret and not kwargs.get("dry", False):
+    if ret and not kwargs.get("dry", False) and not no_lock:
         stage.dump(update_pipeline=False)
     return ret
 
